@@ -1,19 +1,20 @@
-
+from read_write_cart import load_cart
+from read_write_cart import save_cart
 import json
 
-def Remove_From_Cart (item):
+def Rem_Fro_Cart(item):
+        
+        # open and load current data in cart
+            data = load_cart()
 
-   with open("cart.json", "r") as file:
-      cart = json.load(file)
+        # update cart    
+            if item in data:
+                del data[item]
+                print(f"{item} successfully deleted") 
 
-   if item in cart:
-        del cart[item]   
-        with open("cart.json", "w") as file:
-                cart = json.dump(cart, file, indent=4)
+        # Save the updated cart back to file
+                save_cart(data)  
+            else:
+                print(f"{item} not in cart")
 
-
-
-        print(f"{item} deleted from cart succesfully")
-   else:
-        print(f"{item} Not in cart")
         
