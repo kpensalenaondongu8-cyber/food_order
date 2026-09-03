@@ -1,46 +1,20 @@
-from read_write_menu import save_menu
-from read_write_menu import load_menu
-from read_write_cart import save_cart
-from read_write_cart import load_cart
-import json
+from read_write_cart import load_cart, save_cart
 
-def add_to_cart(item_name, quantity):
-    # 1. Open and load the menu to see what items are available
-    menu_data = load_menu()
+def add_to_cart(item, quantity):
+    # 1. Load the active cart file
+    cart = load_cart()
     
-    # Flatten all items from all categories into one easy-to-search list
-    all_items = []
-    for items_list in menu_data["categories"].values():
-        all_items.extend(items_list)
-        
-    # Search for the requested item in the menu
-    found_item = None
-    for item in all_items:
-        if item["name"].lower() == item_name.lower(): # Case-insensitive check
-            found_item = item
-            break
-            
-    # If the item doesn't exist or is out of stock, stop here
-    if not found_item or not found_item["name"]:
-        print(f"Error: '{item_name}' is currently unavailable.")
-        return
+    # Standardize item casing (matches our .title() change)
+    item = item.strip().title()
 
-    # 2. Open and load the current cart data
-    try:
-        cart = load_cart()
-    except (FileNotFoundError, json.JSONDecodeError):
-        cart = {} # Start fresh if the file doesn't exist or is empty
-
-    # 3. Update the cart dictionary
-    if item_name in cart:
-        cart[item_name]["quantity"] += quantity
-
-    # 4. Save the updated cart back to the cart.json file
-        save_cart(cart)
-    else:
-        cart[item_name] = {
-            "quantity": quantity, 
-            "price_per_unit": found_item["price"]
-        }
-          
-    print(f"Success: Added {quantity}x '{item_name}' to your cart!")
+    # 2. Check if it already exists, or initialize it
+    if item not in cart:
+        # Default price assigned when a brand new item enters the cart
+        cart[item] = {"quantity": 0, "price_per_unit": 5.99} 
+    
+    # 3. Add the user's requested quantity
+    cart[item]["quantity"] += quantity
+    print(f"Success: Added {quantity}x {item}(s) to your cart.")
+    
+    # 4. CRUCIAL FIX: Write the updated cart state back to cart.json!
+    save_cart(cart)

@@ -1,1 +1,14 @@
-{}
+{
+    "Rice": {
+        "quantity": 54,
+        "price_per_unit": 5.99
+    },
+    "Hennessey": {
+        "quantity": 3,
+        "price_per_unit": 5.99
+    },
+    "Fresh Lemonade": {
+        "quantity": 3,
+        "price_per_unit": 5.99
+    }
+}

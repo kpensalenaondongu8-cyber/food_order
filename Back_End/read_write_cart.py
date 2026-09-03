@@ -1,6 +1,7 @@
 import json
 import os
 
+
 FILE_NAME = "cart.json"
 def load_cart():
     if not os.path.exists(FILE_NAME):
