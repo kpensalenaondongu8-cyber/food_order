@@ -3,6 +3,7 @@ from read_write_menu import load_menu
 from read_write_cart import load_cart
 from increase_cart import increase_quantity
 from decrease_cart import decrease_quantity
+from remove_from_cart import Rem_Fro_Cart
 from checkout import checkout
 
 app = Flask(__name__)
@@ -15,6 +16,11 @@ def home():
 @app.route('/api/menu', methods=['GET'])
 def get_menu():
     return jsonify(load_menu())
+
+@app.route('/cart')
+def cart_page():
+    return render_template('cart.html')
+
 
 # 2. Route to get the current cart state
 @app.route('/api/cart', methods=['GET'])
@@ -42,6 +48,14 @@ def run_checkout():
     total = checkout()
     return jsonify({"status": "success", "total_charged": total})
 
+
+# 5. Route to remove an item from the cart entirely
+@app.route('/api/cart/remove', methods=['POST'])
+def remove():
+    data = request.json
+    item = data.get("item")
+    Rem_Fro_Cart(item)
+    return jsonify({"status": "success", "cart": load_cart()})
 if __name__ == '__main__':
     # Starts a real web server on your local machine
     app.run(debug=True, port=5000)

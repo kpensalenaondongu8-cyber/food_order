@@ -27,18 +27,15 @@ while True:
        add_to_cart(item_input, item_quantity)
 
     elif user_input == 3:
-      # .title() automatically converts "garlic bread" -> "Garlic Bread"
       rem_item = input("Enter item: ").strip().title()
       Rem_Fro_Cart(rem_item) 
     
     elif user_input == 4:
-        # Standardize the item name capitalization
         item_mod = input("Enter item: ").strip().title()
         
         print("--- Actions ---\n 1. Increase\n 2. Decrease")
         action_input = input("Enter action (number or word): ").strip().lower()
         
-        # 1. Standardize the action input string
         if action_input == "1" or action_input == "increase":
             action = "increase"
         elif action_input == "2" or action_input == "decrease":
@@ -47,11 +44,10 @@ while True:
             print("Invalid action selected!")
             continue
 
-        # 2. Ask for the bulk amount (with error checking)
         amount_input = input("Enter amount to change (Press Enter for 1): ").strip()
         
         if amount_input == "":
-            amount = 1  # Default to 1 if they just hit Enter
+            amount = 1  
         else:
             try:
                amount = int(amount_input)
@@ -62,7 +58,6 @@ while True:
                      print("Invalid syntax! Amount must be a number.")
                      continue
         
-        # Pass both the corrected action and the bulk amount into the router!
         modify_cart(item_mod, action, amount)
 
 

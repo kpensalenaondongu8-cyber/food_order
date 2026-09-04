@@ -1,20 +1,27 @@
 from read_write_cart import load_cart, save_cart
+from read_write_menu import load_menu, save_menu
+
+
+def deduct_stock(cart):
+    menu = load_menu()
+    for category, dishes in menu["categories"].items():
+        for dish in dishes:
+            if dish["name"] in cart:
+                purchased_qty = cart[dish["name"]]["quantity"]
+                dish["quantity"] = max(0, dish["quantity"] - purchased_qty)
+    save_menu(menu)
+
 
 def checkout():
-    # 1. Load the live cart database
     cart = load_cart()
-    
-    # Safety Check: If the cart is empty, stop early
     if not cart:
         print("Your cart is empty! Add some delicious food first.")
         return
 
     total = 0
     print("\n--- RECEIPT ---")
-    
     for food, details in cart.items():
         quantity = details["quantity"]
-        
         price = details["price_per_unit"]
 
         sub_total = quantity * price
@@ -22,11 +29,10 @@ def checkout():
 
     print("----------------")
     print(f"Your Grand Total is: ${total:,.2f}")
-    
-    # 2. Clear the cart data out completely upon successful checkout
+
+    deduct_stock(cart)
+
     cart.clear()
     save_cart(cart)
     print("Checkout successful! Your cart has been reset.")
-    
-    # Return the total so your main loop can use it for payment processing
     return total

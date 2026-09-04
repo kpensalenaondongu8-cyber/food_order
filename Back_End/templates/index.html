@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crispy-Eatery | Gourmet Delivery</title>
-    <!-- Premium Google Fonts -->
-    <link href="https://googleapis.com" rel="stylesheet">
-    <!-- Bootstrap Styling Grid -->
-    <link rel="stylesheet" href="https://jsdelivr.net">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -21,6 +19,29 @@
             padding: 40px;
             margin-bottom: 40px;
             box-shadow: 0 10px 30px rgba(255, 107, 8, 0.2);
+        }
+        .top-nav {
+            background-color: #1C2227;
+            border-bottom: 1px solid #2C353F;
+            padding: 16px 0;
+            margin-bottom: 20px;
+        }
+        .btn-view-cart {
+            background-color: #FF6B08;
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-view-cart:hover {
+            background-color: #E05A00;
+            color: white;
         }
         .category-header {
             color: #FF6B08;
@@ -90,19 +111,6 @@
         .btn-plus:hover { background-color: #E05A00; }
         .btn-minus { background-color: #2C353F; color: #FFF; }
         .btn-minus:hover { background-color: #3D4A58; }
-        .cart-sidebar {
-            background-color: #1C2227;
-            border: 1px solid #2C353F;
-            border-radius: 24px;
-            padding: 25px;
-            position: sticky;
-            top: 30px;
-        }
-        .cart-item {
-            border-bottom: 1px solid #2C353F;
-            padding-bottom: 12px;
-            margin-bottom: 12px;
-        }
         .btn-checkout {
             background: linear-gradient(135deg, #FF6B08 0%, #FF8E53 100%);
             border: none;
@@ -121,78 +129,63 @@
 </head>
 <body>
 
-    <div class="container my-5">
-        <!-- Dashboard Premium Banner Header -->
+    <nav class="top-nav">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold mb-0">Crispy-Eatery 🍔</h4>
+            <a href="/cart" class="btn-view-cart">
+                View Cart
+                <span class="badge bg-dark rounded-pill" id="nav-cart-badge">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mb-5">
         <div class="hero-banner text-white">
-            <h1 class="fw-bold display-5">Crispy-Deliveries 🍔</h1>
+            <h1 class="fw-bold display-5">Crispy-Eatery 🍔</h1>
             <p class="lead mb-0 fs-5 text-white-50">Premium items delivered straight to your workstation.</p>
         </div>
-        
-        <div class="row">
-            <!-- Left Panel: Grid Storefront Layout -->
-            <div class="col-md-8">
-                <div id="menu-container">
-                    <!-- Loaded dynamically via javascript -->
-                </div>
-            </div>
-            
-            <!-- Right Panel: Sticky Modern Interactive Invoice Summary -->
-            <div class="col-md-4">
-                <div class="cart-sidebar shadow">
-                    <h3 class="fw-bold mb-4 d-flex justify-content-between align-items-center">
-                        <span>Your Tray</span>
-                        <span class="badge bg-warning text-dark fs-6 rounded-pill" id="cart-count-badge">0</span>
-                    </h3>
-                    <div id="cart-container">
-                        <p class="text-muted text-center py-4">Your tray is currently empty.</p>
-                    </div>
-                    <button class="btn btn-checkout w-100 mt-3" onclick="triggerCheckout()">Place Order Now</button>
-                </div>
-            </div>
+
+        <div id="menu-container">
         </div>
     </div>
 
+    <script src="/static/js/dish-images.js"></script>
     <script>
-        // Mapping food names directly to dynamic food pictures
-        const fallbackImages = {
-            "Garlic Bread": "https://unsplash.com",
-            "Stuffed Mushrooms": "https://unsplash.com",
-            "Classic Cheeseburger": "https://unsplash.com",
-            "Grilled Salmon": "https://unsplash.com",
-            "Margherita Pizza": "https://unsplash.com",
-            "Iced Coffee": "https://unsplash.com",
-            "Fresh Lemonade": "https://unsplash.com",
-            "Hennessey": "https://unsplash.com"
-        };
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchMenu();
+            refreshCartBadge();
+        });
 
         async function fetchMenu() {
-            const response = await fetch('/api/menu');
-            const data = await response.json();
+            const menuResponse = await fetch('/api/menu');
+            const data = await menuResponse.json();
+            const cartResponse = await fetch('/api/cart');
+            const cartData = await cartResponse.json();
             const container = document.getElementById('menu-container');
             container.innerHTML = '';
 
             for (const [category, items] of Object.entries(data.categories)) {
                 container.innerHTML += `<h3 class="category-header">${category.replace('_', ' ')}</h3>`;
-                
+
                 let rowHtml = '<div class="row g-4">';
                 items.forEach(dish => {
-                    const imgUrl = fallbackImages[dish.name] || "https://unsplash.com";
+                    const imgUrl = getDishImage(dish.name);
+                    const safeId = dish.name.replace(/[^a-zA-Z0-9]/g, '-');
+                    const inCart = cartData[dish.name]?.quantity || 0;
+                    const remainingStock = dish.quantity - inCart;
                     rowHtml += `
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="food-card">
                                 <div class="food-img-wrapper">
                                     <img src="${imgUrl}" class="food-img" alt="${dish.name}">
-                                    <span class="stock-badge">Stock: ${dish.quantity} left</span>
+                                    <span class="stock-badge">Stock: ${remainingStock} left</span>
                                 </div>
                                 <div class="p-4">
                                     <h5 class="fw-bold mb-1">${dish.name}</h5>
                                     <div class="d-flex justify-content-between align-items-center mt-3">
                                         <span class="price-tag">$${dish.price.toFixed(2)}</span>
-                                        <div class="d-flex gap-2">
-                                            <button class="btn-action btn-minus" onclick="updateCart('${dish.name}', 'decrease')">−</button>
-                                            <button class="btn-action btn-plus" onclick="updateCart('${dish.name}', 'increase')">+</button>
-                                        </div>
                                     </div>
+                                    <button class="btn btn-checkout w-100 mt-3 py-2" onclick="addToCart('${dish.name}')">Add to Cart</button>
                                 </div>
                             </div>
                         </div>
@@ -203,37 +196,25 @@
             }
         }
 
-        async function updateCart(itemName, actionType) {
+        async function addToCart(itemName) {
             await fetch('/api/cart/modify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ item: itemName, action: actionType, amount: 1 })
+                body: JSON.stringify({ item: itemName, action: 'increase', amount: 1 })
             });
-            fetchCart();
+            fetchMenu();
+            refreshCartBadge();
         }
 
-        async function fetchCart() {
+        async function refreshCartBadge() {
             const response = await fetch('/api/cart');
             const cartData = await response.json();
-            const container = document.getElementById('cart-container');
-            const badge = document.getElementById('cart-count-badge');
-            
             let totalItems = 0;
-            if (Object.keys(cartData).length === 0) {
-                container.innerHTML = '<p class="text-muted text-center py-4">Your tray is currently empty.</p>';
-                badge.innerText = '0';
-                return;
-            }
-
-            container.innerHTML = '';
-            let grandTotal = 0;
-
-            for (const [name, details] of Object.entries(cartData)) {
-                let subtotal = details.quantity * details.price_per_unit;
-                grandTotal += subtotal;
+            for (const details of Object.values(cartData)) {
                 totalItems += details.quantity;
-                
-                container.innerHTML += `
-                    <div class="cart-item d-flex justify-content-between align-items-center">
-                        <div>
-                        
+            }
+            document.getElementById('nav-cart-badge').innerText = totalItems;
+        }
+    </script>
+</body>
+</html>
