@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crispy-Eatery | Gourmet Delivery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #12161A;
+            color: #F8F9FA;
+        }
+        .hero-banner {
+            background: linear-gradient(135deg, #FF6B08 0%, #FF8E53 100%);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(255, 107, 8, 0.2);
+        }
+        .top-nav {
+            background-color: #1C2227;
+            border-bottom: 1px solid #2C353F;
+            padding: 16px 0;
+            margin-bottom: 20px;
+        }
+        .btn-view-cart {
+            background-color: #FF6B08;
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-view-cart:hover {
+            background-color: #E05A00;
+            color: white;
+        }
+        .category-header {
+            color: #FF6B08;
+            font-weight: 700;
+            border-left: 5px solid #FF6B08;
+            padding-left: 15px;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .food-card {
+            background-color: #1C2227;
+            border: 1px solid #2C353F;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .food-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+            border-color: #FF6B08;
+        }
+        .food-img-wrapper {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        .food-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .food-card:hover .food-img {
+            transform: scale(1.1);
+        }
+        .stock-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #FFF;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            backdrop-filter: blur(5px);
+        }
+        .price-tag {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #FF8E53;
+        }
+        .btn-action {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-plus { background-color: #FF6B08; color: white; }
+        .btn-plus:hover { background-color: #E05A00; }
+        .btn-minus { background-color: #2C353F; color: #FFF; }
+        .btn-minus:hover { background-color: #3D4A58; }
+        .btn-checkout {
+            background: linear-gradient(135deg, #FF6B08 0%, #FF8E53 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 14px;
+            border-radius: 14px;
+            box-shadow: 0 5px 15px rgba(255, 107, 8, 0.3);
+            transition: all 0.3s;
+        }
+        .btn-checkout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 8, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold mb-0">Crispy-Eatery 🍔</h4>
+            <a href="/cart" class="btn-view-cart">
+                View Cart
+                <span class="badge bg-dark rounded-pill" id="nav-cart-badge">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mb-5">
+        <div class="hero-banner text-white">
+            <h1 class="fw-bold display-5">Crispy-Eatery 🍔</h1>
+            <p class="lead mb-0 fs-5 text-white-50">Premium items delivered straight to your workstation.</p>
+        </div>
+
+        <div id="menu-container">
+        </div>
+    </div>
+
+    <script src="/static/js/dish-images.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchMenu();
+            refreshCartBadge();
+        });
+
+        async function fetchMenu() {
+            const menuResponse = await fetch('/api/menu');
+            const data = await menuResponse.json();
+            const cartResponse = await fetch('/api/cart');
+            const cartData = await cartResponse.json();
+            const container = document.getElementById('menu-container');
+            container.innerHTML = '';
+
+            for (const [category, items] of Object.entries(data.categories)) {
+                container.innerHTML += `<h3 class="category-header">${category.replace('_', ' ')}</h3>`;
+
+                let rowHtml = '<div class="row g-4">';
+                items.forEach(dish => {
+                    const imgUrl = getDishImage(dish.name);
+                    const safeId = dish.name.replace(/[^a-zA-Z0-9]/g, '-');
+                    const inCart = cartData[dish.name]?.quantity || 0;
+                    const remainingStock = dish.quantity - inCart;
+                    rowHtml += `
+                        <div class="col-md-4">
+                            <div class="food-card">
+                                <div class="food-img-wrapper">
+                                    <img src="${imgUrl}" class="food-img" alt="${dish.name}">
+                                    <span class="stock-badge">Stock: ${remainingStock} left</span>
+                                </div>
+                                <div class="p-4">
+                                    <h5 class="fw-bold mb-1">${dish.name}</h5>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <span class="price-tag">$${dish.price.toFixed(2)}</span>
+                                    </div>
+                                    <button class="btn btn-checkout w-100 mt-3 py-2" onclick="addToCart('${dish.name}')">Add to Cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                rowHtml += '</div>';
+                container.innerHTML += rowHtml;
+            }
+        }
+
+        async function addToCart(itemName) {
+            await fetch('/api/cart/modify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ item: itemName, action: 'increase', amount: 1 })
+            });
+            fetchMenu();
+            refreshCartBadge();
+        }
+
+        async function refreshCartBadge() {
+            const response = await fetch('/api/cart');
+            const cartData = await response.json();
+            let totalItems = 0;
+            for (const details of Object.values(cartData)) {
+                totalItems += details.quantity;
+            }
+            document.getElementById('nav-cart-badge').innerText = totalItems;
+        }
+    </script>
+</body>
+</html>
