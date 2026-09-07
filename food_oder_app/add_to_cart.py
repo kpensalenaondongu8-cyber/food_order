@@ -1,3 +1,5 @@
+import sqlite
+
 from read_write_cart import load_cart, save_cart
 
 def add_to_cart(item, quantity):
