@@ -52,8 +52,12 @@ def api_logout():
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('login.html')
 
+
+@app.route('/menu')
+def menu_page():
+    return render_template('index.html')
 
 # 1. Route to get the whole menu data for the frontend
 @app.route('/api/menu', methods=['GET'])

@@ -131,6 +131,15 @@
 
         async function fetchCart() {
             const response = await fetch('/api/cart');
+
+            // NEW: if the server says we're not logged in, bounce to the
+            // homepage instead of trying to render an error object as a cart.
+            if (response.status === 401) {
+                alert('Please log in to view your cart.');
+                window.location.href = '/';
+                return;
+            }
+
             const cartData = await response.json();
             const container = document.getElementById('cart-items-container');
 
@@ -175,27 +184,45 @@
         }
 
         async function updateCart(itemName, actionType) {
-            await fetch('/api/cart/modify', {
+            const response = await fetch('/api/cart/modify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ item: itemName, action: actionType, amount: 1 })
             });
+            if (response.status === 401) {
+                alert('Please log in to modify your cart.');
+                window.location.href = '/';
+                return;
+            }
             fetchCart();
         }
 
         async function removeFromCart(itemName) {
-            await fetch('/api/cart/remove', {
+            const response = await fetch('/api/cart/remove', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ item: itemName })
             });
+            if (response.status === 401) {
+                alert('Please log in to modify your cart.');
+                window.location.href = '/';
+                return;
+            }
             fetchCart();
         }
 
         function triggerCheckout() {
             fetch('/api/checkout', { method: 'POST' })
-                .then(res => res.json())
+                .then(res => {
+                    if (res.status === 401) {
+                        alert('Please log in to check out.');
+                        window.location.href = '/';
+                        return null;
+                    }
+                    return res.json();
+                })
                 .then(data => {
+                    if (!data) return;
                     alert(data.message || `Order placed! Total charged: $${data.total_charged?.toFixed ? data.total_charged.toFixed(2) : data.total_charged}`);
                     fetchCart();
                 })
