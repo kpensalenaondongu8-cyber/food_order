@@ -5,7 +5,7 @@ from werkzeug.security import check_password_hash
 def login(number, password):
     conn = sqlite3.connect("app.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT password_hash FROM users WHERE number = ?", (number,))
+    cursor.execute("SELECT id, password_hash FROM users WHERE number = ?", (number,))
     row = cursor.fetchone()
     conn.close()
 
@@ -13,10 +13,11 @@ def login(number, password):
         print("No account with that number")
         return False
 
-    stored_hash = row[0]
+    stored_hash = row[1]
+    stored_id = row[0]
     if check_password_hash(stored_hash, password):
         print("Login successful")
-        return True
+        return stored_id
     else:
         print("Wrong password")
         return False

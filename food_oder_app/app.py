@@ -1,12 +1,48 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, session
 from read_write_menu import load_menu
 from read_write_cart import load_cart
 from increase_cart import increase_quantity
 from decrease_cart import decrease_quantity
 from remove_from_cart import Rem_Fro_Cart
 from checkout import checkout
+from login import login
+from create_acct import create_acct
 
 app = Flask(__name__)
+app.secret_key = "some-random-secret-string-change-later"
+
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    data = request.json
+    number = data.get("number")
+    password = data.get("password")
+
+    user_id = login(number, password)
+    if user_id:
+        session["user_id"] = user_id
+        return jsonify({"status": "success"})
+    else:
+        return jsonify({"status": "error", "message": "Invalid number or password"}), 401
+
+
+@app.route('/api/signup', methods=['POST'])
+def api_signup():
+    data = request.json
+    create_acct(
+        data.get("first_name"),
+        data.get("middle_name", ""),
+        data.get("last_name"),
+        data.get("number"),
+        data.get("password")
+    )
+    return jsonify({"status": "success"})
+
+
+@app.route('/api/logout', methods=['POST'])
+def api_logout():
+    session.pop("user_id", None)
+    return jsonify({"status": "success"})
+
 @app.route('/')
 def home():
     return render_template('index.html')

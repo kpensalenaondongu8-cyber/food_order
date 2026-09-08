@@ -6,13 +6,13 @@
                 "id": 1,
                 "name": "Garlic Bread",
                 "price": 5.99,
-                "quantity": 49
+                "quantity": 43
             },
             {
                 "id": 2,
                 "name": "Stuffed Mushrooms",
                 "price": 8.5,
-                "quantity": 48
+                "quantity": 47
             },
             {
                 "id": 3,
