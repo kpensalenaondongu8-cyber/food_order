@@ -7,9 +7,13 @@ from remove_from_cart import Rem_Fro_Cart
 from checkout import checkout
 from login import login
 from create_acct import create_acct
+import os
+from dotenv import load_dotenv
+from wrap import login_required
 
+load_dotenv()
 app = Flask(__name__)
-app.secret_key = "some-random-secret-string-change-later"
+app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
@@ -18,7 +22,7 @@ def api_login():
     password = data.get("password")
 
     user_id = login(number, password)
-    if user_id:
+    if user_id is not False:
         session["user_id"] = user_id
         return jsonify({"status": "success"})
     else:
@@ -43,6 +47,9 @@ def api_logout():
     session.pop("user_id", None)
     return jsonify({"status": "success"})
 
+
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -60,11 +67,13 @@ def cart_page():
 
 # 2. Route to get the current cart state
 @app.route('/api/cart', methods=['GET'])
+@login_required
 def get_cart():
     return jsonify(load_cart())
 
 # 3. Route to change quantities when buttons are clicked
 @app.route('/api/cart/modify', methods=['POST'])
+@login_required
 def modify():
     data = request.json
     item = data.get("item")
@@ -80,6 +89,7 @@ def modify():
 
 # 4. Route to trigger checkout
 @app.route('/api/checkout', methods=['POST'])
+@login_required
 def run_checkout():
     total = checkout()
     return jsonify({"status": "success", "total_charged": total})
@@ -87,6 +97,7 @@ def run_checkout():
 
 # 5. Route to remove an item from the cart entirely
 @app.route('/api/cart/remove', methods=['POST'])
+@login_required
 def remove():
     data = request.json
     item = data.get("item")
