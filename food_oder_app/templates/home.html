@@ -109,24 +109,21 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(255, 107, 8, 0.5);
         }
-        .auth-box {
-            background-color: #1C2227;
-            border: 1px solid #2C353F;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-        .auth-box input {
-            background-color: #12161A;
-            border: 1px solid #2C353F;
+        .welcome-note {
             color: #F8F9FA;
-            border-radius: 8px;
-            padding: 8px 12px;
-            margin-right: 8px;
-            margin-bottom: 8px;
         }
-        .auth-box input::placeholder { color: #7a8290; }
-        .auth-box a { color: #FF8E53; cursor: pointer; }
+        .btn-logout {
+            background-color: #2C353F;
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover {
+            background-color: #3D4A58;
+        }
     </style>
 </head>
 <body>
@@ -134,10 +131,14 @@
     <nav class="top-nav">
         <div class="container d-flex justify-content-between align-items-center">
             <h4 class="fw-bold mb-0">Crispy-Eatery 🍔</h4>
-            <a href="/cart" class="btn-view-cart">
-                View Cart
-                <span class="badge bg-dark rounded-pill" id="nav-cart-badge">0</span>
-            </a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="welcome-note">Welcome back!</span>
+                <button class="btn-logout" onclick="handleLogout()">Logout</button>
+                <a href="/cart" class="btn-view-cart">
+                    View Cart
+                    <span class="badge bg-dark rounded-pill" id="nav-cart-badge">0</span>
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -147,73 +148,27 @@
             <p class="lead mb-0 fs-5 text-white-50">Premium items delivered straight to your workstation.</p>
         </div>
 
-        <div id="auth-container">
-            <div class="auth-box d-flex justify-content-between align-items-center" id="logged-in-view" style="display:none;">
-                <span>Welcome back!</span>
-                <button class="btn btn-checkout" onclick="handleLogout()">Logout</button>
-            </div>
-            <div class="auth-box d-flex justify-content-between align-items-center" id="logged-out-view" style="display:none;">
-                <span>Browsing as a guest.</span>
-                <a href="/" class="btn btn-checkout">Log in / Sign up</a>
-            </div>
-        </div>
-
         <div id="menu-container"></div>
     </div>
 
     <script src="/static/js/dish-images.js"></script>
     <script>
-       
-        let isLoggedIn = false;
+        // This page assumes the user is logged in. If /api/cart comes back
+        // 401, the session isn't valid (expired, cleared, etc) — bounce to login
+        // rather than showing a broken "welcome back" page with no real cart.
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            await checkLoginStatus();
-            fetchMenu();
-        });
-
-      
-        async function checkLoginStatus() {
-            const response = await fetch('/api/cart');
-            if (response.status === 401) {
-                isLoggedIn = false;
-                showLoggedOutUI();
-            } else {
-                isLoggedIn = true;
-                showLoggedInUI();
-            }
-        }
-
-        function showLoggedInUI() {
-            document.getElementById('logged-out-view').style.display = 'none';
-            document.getElementById('logged-in-view').style.display = 'flex';
-        }
-
-        function showLoggedOutUI() {
-            document.getElementById('logged-in-view').style.display = 'none';
-            document.getElementById('logged-out-view').style.display = 'block';
-        }
-
-        async function handleLogout() {
-            await fetch('/api/logout', { method: 'POST' });
-            isLoggedIn = false;
-            showLoggedOutUI();
-            fetchMenu();
-        }
+        document.addEventListener('DOMContentLoaded', fetchMenu);
 
         async function fetchMenu() {
             const menuResponse = await fetch('/api/menu');
             const data = await menuResponse.json();
 
-            // Only ask for cart data if we're actually logged in —
-            // this is the fix for the 401/NaN bug: an anonymous visitor
-            // never calls /api/cart here, so cartData just stays {}.
-            let cartData = {};
-            if (isLoggedIn) {
-                const cartResponse = await fetch('/api/cart');
-                if (cartResponse.status === 200) {
-                    cartData = await cartResponse.json();
-                }
+            const cartResponse = await fetch('/api/cart');
+            if (cartResponse.status === 401) {
+                window.location.href = '/login';
+                return;
             }
+            const cartData = await cartResponse.json();
 
             const container = document.getElementById('menu-container');
             container.innerHTML = '';
@@ -252,20 +207,23 @@
         }
 
         async function addToCart(itemName) {
-            if (!isLoggedIn) {
-                alert('Please log in first to add items to your cart.');
-                return;
-            }
-            await fetch('/api/cart/modify', {
+            const response = await fetch('/api/cart/modify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ item: itemName, action: 'increase', amount: 1 })
             });
+            if (response.status === 401) {
+                window.location.href = '/login';
+                return;
+            }
             fetchMenu();
         }
 
-        // Now takes cartData directly instead of re-fetching —
-        // avoids a second unauthenticated call to /api/cart.
+        async function handleLogout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/';
+        }
+
         function refreshCartBadge(cartData) {
             let totalItems = 0;
             for (const details of Object.values(cartData)) {

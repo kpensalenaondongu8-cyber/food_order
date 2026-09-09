@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template, session
+from flask import Flask, jsonify, request, render_template, session, redirect, url_for
 from read_write_menu import load_menu
 from read_write_cart import load_cart
 from increase_cart import increase_quantity
@@ -14,6 +14,27 @@ from wrap import login_required
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
+
+
+@app.route('/')
+def home():
+    if "user_id" in session:
+        return redirect(url_for('logged_in_home'))
+    return render_template('guest.html')
+
+
+@app.route('/login')
+def login_page():
+    return render_template('login.html')
+
+@app.route('/home')
+def logged_in_home():
+    return render_template('home.html')
+
+@app.route('/cart')
+def cart_page():
+    return render_template('cart.html')
+
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
@@ -48,26 +69,10 @@ def api_logout():
     return jsonify({"status": "success"})
 
 
-
-
-@app.route('/')
-def home():
-    return render_template('login.html')
-
-
-@app.route('/menu')
-def menu_page():
-    return render_template('index.html')
-
 # 1. Route to get the whole menu data for the frontend
 @app.route('/api/menu', methods=['GET'])
 def get_menu():
     return jsonify(load_menu())
-
-@app.route('/cart')
-def cart_page():
-    return render_template('cart.html')
-
 
 # 2. Route to get the current cart state
 @app.route('/api/cart', methods=['GET'])

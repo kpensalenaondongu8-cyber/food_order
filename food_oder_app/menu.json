@@ -6,19 +6,19 @@
                 "id": 1,
                 "name": "Garlic Bread",
                 "price": 5.99,
-                "quantity": 43
+                "quantity": 41
             },
             {
                 "id": 2,
                 "name": "Stuffed Mushrooms",
                 "price": 8.5,
-                "quantity": 47
+                "quantity": 45
             },
             {
                 "id": 3,
                 "name": "Mashed Potatoes",
                 "price": 8.9,
-                "quantity": 48
+                "quantity": 46
             }
         ],
         "main_courses": [
@@ -26,31 +26,31 @@
                 "id": 5,
                 "name": "Classic Cheeseburger",
                 "price": 12.99,
-                "quantity": 50
+                "quantity": 49
             },
             {
                 "id": 6,
                 "name": "Grilled Salmon",
                 "price": 18.5,
-                "quantity": 50
+                "quantity": 49
             },
             {
                 "id": 7,
                 "name": "Margherita Pizza",
                 "price": 14.0,
-                "quantity": 50
+                "quantity": 49
             },
             {
                 "id": 8,
                 "name": "Sharwama",
                 "price": 13.7,
-                "quantity": 50
+                "quantity": 49
             },
             {
                 "id": 9,
                 "name": "Grilled Turkey",
                 "price": 43.6,
-                "quantity": 50
+                "quantity": 49
             }
         ],
         "drinks": [
@@ -58,13 +58,13 @@
                 "id": 10,
                 "name": "Iced Coffee",
                 "price": 3.5,
-                "quantity": 46
+                "quantity": 45
             },
             {
                 "id": 11,
                 "name": "Fresh Lemonade",
                 "price": 4.0,
-                "quantity": 48
+                "quantity": 47
             },
             {
                 "id": 12,

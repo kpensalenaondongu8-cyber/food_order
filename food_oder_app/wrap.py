@@ -6,4 +6,5 @@ def login_required(f):
     def wrapper(*args, **kwargs):
         if "user_id" not in session:
             return jsonify({"status": "error", "message": "Please log in first"}), 401
+        return f(*args, **kwargs)
     return wrapper
