@@ -17,6 +17,9 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 
+@app.route('/orders')
+def orders_page():
+    return render_template('orders.html')
 
 @app.route('/')
 def home():

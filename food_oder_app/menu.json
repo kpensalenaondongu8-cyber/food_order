@@ -6,19 +6,19 @@
                 "id": 1,
                 "name": "Garlic Bread",
                 "price": 5.99,
-                "quantity": 36
+                "quantity": 33
             },
             {
                 "id": 2,
                 "name": "Stuffed Mushrooms",
                 "price": 8.5,
-                "quantity": 40
+                "quantity": 37
             },
             {
                 "id": 3,
                 "name": "Mashed Potatoes",
                 "price": 8.9,
-                "quantity": 42
+                "quantity": 39
             }
         ],
         "main_courses": [
@@ -26,19 +26,19 @@
                 "id": 5,
                 "name": "Classic Cheeseburger",
                 "price": 12.99,
-                "quantity": 47
+                "quantity": 46
             },
             {
                 "id": 6,
                 "name": "Grilled Salmon",
                 "price": 18.5,
-                "quantity": 49
+                "quantity": 46
             },
             {
                 "id": 7,
                 "name": "Margherita Pizza",
                 "price": 14.0,
-                "quantity": 49
+                "quantity": 46
             },
             {
                 "id": 8,
@@ -64,7 +64,7 @@
                 "id": 11,
                 "name": "Fresh Lemonade",
                 "price": 4.0,
-                "quantity": 44
+                "quantity": 43
             },
             {
                 "id": 12,
