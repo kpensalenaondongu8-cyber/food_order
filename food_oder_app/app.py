@@ -10,6 +10,8 @@ from create_acct import create_acct
 import os
 from dotenv import load_dotenv
 from wrap import login_required
+from order_history import get_order_history
+
 
 load_dotenv()
 app = Flask(__name__)
@@ -69,6 +71,12 @@ def api_logout():
     return jsonify({"status": "success"})
 
 
+@app.route('/api/orders', methods=['GET'])
+@login_required
+def get_orders():
+    history = get_order_history(session["user_id"])
+    return jsonify(history)
+
 # 1. Route to get the whole menu data for the frontend
 @app.route('/api/menu', methods=['GET'])
 def get_menu():
@@ -100,7 +108,7 @@ def modify():
 @app.route('/api/checkout', methods=['POST'])
 @login_required
 def run_checkout():
-    total = checkout()
+    total = checkout(session["user_id"])
     return jsonify({"status": "success", "total_charged": total})
 
 

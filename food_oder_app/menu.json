@@ -6,19 +6,19 @@
                 "id": 1,
                 "name": "Garlic Bread",
                 "price": 5.99,
-                "quantity": 41
+                "quantity": 36
             },
             {
                 "id": 2,
                 "name": "Stuffed Mushrooms",
                 "price": 8.5,
-                "quantity": 45
+                "quantity": 40
             },
             {
                 "id": 3,
                 "name": "Mashed Potatoes",
                 "price": 8.9,
-                "quantity": 46
+                "quantity": 42
             }
         ],
         "main_courses": [
@@ -26,7 +26,7 @@
                 "id": 5,
                 "name": "Classic Cheeseburger",
                 "price": 12.99,
-                "quantity": 49
+                "quantity": 47
             },
             {
                 "id": 6,
@@ -44,13 +44,13 @@
                 "id": 8,
                 "name": "Sharwama",
                 "price": 13.7,
-                "quantity": 49
+                "quantity": 48
             },
             {
                 "id": 9,
                 "name": "Grilled Turkey",
                 "price": 43.6,
-                "quantity": 49
+                "quantity": 48
             }
         ],
         "drinks": [
@@ -58,19 +58,19 @@
                 "id": 10,
                 "name": "Iced Coffee",
                 "price": 3.5,
-                "quantity": 45
+                "quantity": 41
             },
             {
                 "id": 11,
                 "name": "Fresh Lemonade",
                 "price": 4.0,
-                "quantity": 47
+                "quantity": 44
             },
             {
                 "id": 12,
                 "name": "Hennessey",
                 "price": 7.8,
-                "quantity": 49
+                "quantity": 46
             }
         ]
     }
