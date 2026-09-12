@@ -11,6 +11,7 @@ import os
 from dotenv import load_dotenv
 from wrap import login_required
 from order_history import get_order_history
+from restaurant_orders import get_restaurant_orders
 
 
 load_dotenv()
@@ -20,6 +21,18 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 @app.route('/orders')
 def orders_page():
     return render_template('orders.html')
+
+
+@app.route('/api/restaurant/orders', methods=['GET'])
+def restaurant_orders():
+    orders = get_restaurant_orders()
+    return jsonify(orders)
+
+
+@app.route('/restaurant')
+def restaurant_page():
+    return render_template('restaurant.html')
+
 
 @app.route('/')
 def home():

@@ -6,7 +6,6 @@ def init_db():
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
-    print("Creating users table...")
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,9 +16,7 @@ def init_db():
             password_hash TEXT NOT NULL
         )
     """)
-    print("users done")
 
-    print("Creating orders table...")
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS orders (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,9 +26,14 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES users(id)
         )
     """)
-    print("orders done")
+    cursor.execute("PRAGMA table_info(orders)")
+    columns = [column[1] for column in cursor.fetchall()]
 
-    print("Creating order_items table...")
+    if "status" not in columns:
+        cursor.execute(
+            "ALTER TABLE orders ADD COLUMN status TEXT NOT NULL DEFAULT 'pending'"
+        )
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS order_items (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,17 +44,9 @@ def init_db():
             FOREIGN KEY (order_id) REFERENCES orders(id)
         )
     """)
-    print("order_items done")
 
     conn.commit()
-    print("Committed")
-
-    # Check immediately, same connection, before closing anything
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
-    print("Tables that exist right now:", cursor.fetchall())
-
     conn.close()
-    print("Closed")
 
 if __name__ == "__main__":
     init_db()

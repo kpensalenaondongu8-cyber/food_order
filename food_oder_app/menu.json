@@ -6,13 +6,13 @@
                 "id": 1,
                 "name": "Garlic Bread",
                 "price": 5.99,
-                "quantity": 33
+                "quantity": 32
             },
             {
                 "id": 2,
                 "name": "Stuffed Mushrooms",
                 "price": 8.5,
-                "quantity": 37
+                "quantity": 36
             },
             {
                 "id": 3,
@@ -26,31 +26,31 @@
                 "id": 5,
                 "name": "Classic Cheeseburger",
                 "price": 12.99,
-                "quantity": 46
+                "quantity": 45
             },
             {
                 "id": 6,
                 "name": "Grilled Salmon",
                 "price": 18.5,
-                "quantity": 46
+                "quantity": 45
             },
             {
                 "id": 7,
                 "name": "Margherita Pizza",
                 "price": 14.0,
-                "quantity": 46
+                "quantity": 45
             },
             {
                 "id": 8,
                 "name": "Sharwama",
                 "price": 13.7,
-                "quantity": 48
+                "quantity": 46
             },
             {
                 "id": 9,
                 "name": "Grilled Turkey",
                 "price": 43.6,
-                "quantity": 48
+                "quantity": 46
             }
         ],
         "drinks": [
@@ -58,19 +58,19 @@
                 "id": 10,
                 "name": "Iced Coffee",
                 "price": 3.5,
-                "quantity": 41
+                "quantity": 40
             },
             {
                 "id": 11,
                 "name": "Fresh Lemonade",
                 "price": 4.0,
-                "quantity": 43
+                "quantity": 42
             },
             {
                 "id": 12,
                 "name": "Hennessey",
                 "price": 7.8,
-                "quantity": 46
+                "quantity": 45
             }
         ]
     }
