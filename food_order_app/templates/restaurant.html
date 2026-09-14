@@ -8,14 +8,14 @@
 
     <h1>Restaurant Dashboard</h1>
 
-    <div id="orders"></div>
+    <div id="orders-container"></div>
 
     <script>
         fetch("/api/restaurant/orders")
         .then(response => response.json())
         .then(orders => {
 
-        const ordersContainer = document.getElementById("orders");
+        const ordersContainer = document.getElementById("orders-container");
 
         orders.forEach(order => {
 
@@ -28,6 +28,7 @@
                 <p>Status: ${order.status}</p>
             `;
 
+            
             ordersContainer.appendChild(orderElement);
         });
     });
