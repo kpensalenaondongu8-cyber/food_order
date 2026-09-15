@@ -26,19 +26,19 @@
                 "id": 5,
                 "name": "Classic Cheeseburger",
                 "price": 12.99,
-                "quantity": 45
+                "quantity": 44
             },
             {
                 "id": 6,
                 "name": "Grilled Salmon",
                 "price": 18.5,
-                "quantity": 45
+                "quantity": 44
             },
             {
                 "id": 7,
                 "name": "Margherita Pizza",
                 "price": 14.0,
-                "quantity": 45
+                "quantity": 43
             },
             {
                 "id": 8,
@@ -50,7 +50,7 @@
                 "id": 9,
                 "name": "Grilled Turkey",
                 "price": 43.6,
-                "quantity": 46
+                "quantity": 43
             }
         ],
         "drinks": [

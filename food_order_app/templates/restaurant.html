@@ -21,17 +21,47 @@
 
             const orderElement = document.createElement("div");
 
-            orderElement.innerHTML = `
+              let buttonHTML = "";
+
+            if (order.status === "pending") {
+                buttonHTML = `
+                    <button onclick="changeStatus(${order.id}, 'accepted')">
+                        Accept Order
+                    </button>
+                `;
+            }
+
+                orderElement.innerHTML = `
                 <h2>Order #${order.id}</h2>
                 <p>Customer ID: ${order.user_id}</p>
                 <p>Total: ₦${order.total}</p>
-                <p>Status: ${order.status}</p>
+                <p id="status-${order.id}">Status: ${order.status}</p>           
+                <p id="status-${order.id}">Status: ${order.status}</p>
+                ${buttonHTML} 
             `;
 
             
             ordersContainer.appendChild(orderElement);
         });
     });
+    function changeStatus(orderId, newStatus) {
+    fetch(`/api/restaurant/orders/${orderId}/status`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            status: newStatus
+        })
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log(result);
+
+        document.getElementById(`status-${orderId}`).textContent =
+            `Status: ${newStatus}`
+    });
+}
     </script>
 
 </body>

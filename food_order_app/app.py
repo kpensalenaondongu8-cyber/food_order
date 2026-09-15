@@ -12,21 +12,30 @@ from dotenv import load_dotenv
 from wrap import login_required
 from order_history import get_order_history
 from restaurant_orders import get_restaurant_orders
+from restaurant_status import restaurant_status
+
 
 
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 
-@app.route('/orders')
-def orders_page():
-    return render_template('orders.html')
-
-
 @app.route('/api/restaurant/orders', methods=['GET'])
 def restaurant_orders():
     orders = get_restaurant_orders()
     return jsonify(orders)
+
+@app.route('/api/restaurant/orders/<int:order_id>/status', methods=['POST'])
+def update_status(order_id):
+    data = request.json
+    new_status = data.get("status")
+    restaurant_status(order_id, new_status)
+
+    return jsonify({"status": "success"})
+
+@app.route('/orders')
+def orders_page():
+    return render_template('orders.html')
 
 
 @app.route('/restaurant')
