@@ -6,19 +6,19 @@
                 "id": 1,
                 "name": "Garlic Bread",
                 "price": 5.99,
-                "quantity": 30
+                "quantity": 29
             },
             {
                 "id": 2,
                 "name": "Stuffed Mushrooms",
                 "price": 8.5,
-                "quantity": 35
+                "quantity": 34
             },
             {
                 "id": 3,
                 "name": "Mashed Potatoes",
                 "price": 8.9,
-                "quantity": 37
+                "quantity": 36
             }
         ],
         "main_courses": [
@@ -26,31 +26,31 @@
                 "id": 5,
                 "name": "Classic Cheeseburger",
                 "price": 12.99,
-                "quantity": 44
+                "quantity": 42
             },
             {
                 "id": 6,
                 "name": "Grilled Salmon",
                 "price": 18.5,
-                "quantity": 44
+                "quantity": 43
             },
             {
                 "id": 7,
                 "name": "Margherita Pizza",
                 "price": 14.0,
-                "quantity": 43
+                "quantity": 42
             },
             {
                 "id": 8,
                 "name": "Sharwama",
                 "price": 13.7,
-                "quantity": 46
+                "quantity": 41
             },
             {
                 "id": 9,
                 "name": "Grilled Turkey",
                 "price": 43.6,
-                "quantity": 43
+                "quantity": 42
             }
         ],
         "drinks": [
@@ -58,19 +58,19 @@
                 "id": 10,
                 "name": "Iced Coffee",
                 "price": 3.5,
-                "quantity": 39
+                "quantity": 38
             },
             {
                 "id": 11,
                 "name": "Fresh Lemonade",
                 "price": 4.0,
-                "quantity": 41
+                "quantity": 40
             },
             {
                 "id": 12,
                 "name": "Hennessey",
                 "price": 7.8,
-                "quantity": 44
+                "quantity": 43
             }
         ]
     }
