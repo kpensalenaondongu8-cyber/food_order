@@ -34,7 +34,7 @@ def restaurant_page():
     return render_template('restaurant.html')
 
 
-app.route('/')
+@app.route('/')
 def home():
     if "user_id" in session:
         return redirect(url_for('logged_in_home'))

@@ -6,19 +6,19 @@
                 "id": 1,
                 "name": "Garlic Bread",
                 "price": 5.99,
-                "quantity": 32
+                "quantity": 30
             },
             {
                 "id": 2,
                 "name": "Stuffed Mushrooms",
                 "price": 8.5,
-                "quantity": 36
+                "quantity": 35
             },
             {
                 "id": 3,
                 "name": "Mashed Potatoes",
                 "price": 8.9,
-                "quantity": 39
+                "quantity": 37
             }
         ],
         "main_courses": [
@@ -58,19 +58,19 @@
                 "id": 10,
                 "name": "Iced Coffee",
                 "price": 3.5,
-                "quantity": 40
+                "quantity": 39
             },
             {
                 "id": 11,
                 "name": "Fresh Lemonade",
                 "price": 4.0,
-                "quantity": 42
+                "quantity": 41
             },
             {
                 "id": 12,
                 "name": "Hennessey",
                 "price": 7.8,
-                "quantity": 45
+                "quantity": 44
             }
         ]
     }
