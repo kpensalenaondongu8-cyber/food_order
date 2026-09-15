@@ -21,7 +21,7 @@
 
             const orderElement = document.createElement("div");
 
-              let buttonHTML = "";
+            let buttonHTML = "";
 
             if (order.status === "pending") {
                 buttonHTML = `
@@ -48,10 +48,22 @@
                     Completed
                     </button>`
             }
+            let itemsHTML = "";
 
+            order.items.forEach(item => {
+            itemsHTML += `
+            <p>
+            ${item.food_name}
+            × ${item.quantity}
+            - $${item.price}
+            </p>
+            `;
+           });
                 orderElement.innerHTML = `
                 <h2>Order #${order.id}</h2>
                 <p>Customer ID: ${order.user_id}</p>
+                <h3>Items</h3>
+                ${itemsHTML}
                 <p>Total: ₦${order.total}</p>
                 <p id="status-${order.id}">Status: ${order.status}</p>
                 ${buttonHTML} 

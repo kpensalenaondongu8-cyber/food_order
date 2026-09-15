@@ -10,4 +10,11 @@ for table in ["users", "orders", "order_items"]:
     for column in schema:
         print(column)
 
+    cursor.execute("SELECT id, first_name, last_name, number, role FROM users")
+
+    users = cursor.fetchall()
+
+    for user in users:
+      print(user)
+ 
 conn.close()

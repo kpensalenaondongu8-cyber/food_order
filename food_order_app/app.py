@@ -13,6 +13,7 @@ from wrap import login_required
 from order_history import get_order_history
 from restaurant_orders import get_restaurant_orders
 from restaurant_status import restaurant_status
+from restaurant_auth import restaurant_required
 
 
 
@@ -20,7 +21,9 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 
+
 @app.route('/api/restaurant/orders', methods=['GET'])
+@restaurant_required
 def restaurant_orders():
     orders = get_restaurant_orders()
     return jsonify(orders)
@@ -29,9 +32,13 @@ def restaurant_orders():
 def update_status(order_id):
     data = request.json
     new_status = data.get("status")
-    restaurant_status(order_id, new_status)
-
-    return jsonify({"status": "success"})
+    success =  restaurant_status(order_id, new_status)
+    if not success:
+        return jsonify({
+            "status": "error",
+            "message": "Invalid status transition"
+        }),400
+    return jsonify({"status": "success"})  
 
 @app.route('/orders')
 def orders_page():
@@ -39,6 +46,7 @@ def orders_page():
 
 
 @app.route('/restaurant')
+@restaurant_required
 def restaurant_page():
     return render_template('restaurant.html')
 

@@ -16,6 +16,13 @@ def init_db():
             password_hash TEXT NOT NULL
         )
     """)
+    cursor.execute("PRAGMA table_info(users)")
+    columns = [column[1] for column in cursor.fetchall()]
+
+    if "role" not in columns:
+      cursor.execute(
+         "ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'user'"
+    )
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS orders (

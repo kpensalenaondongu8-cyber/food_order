@@ -21,7 +21,15 @@ def get_restaurant_orders():
         WHERE order_id = ?
         """, (order_id,))
     items = cursor.fetchall()  
-
+    
+    items = [
+      {
+        "food_name": item[0],
+        "quantity": item[1],
+        "price": item[2]
+      }
+      for item in items
+    ]
 
     order_data = {
         "id": order[0],
