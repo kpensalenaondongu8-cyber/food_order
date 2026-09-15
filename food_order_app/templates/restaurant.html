@@ -25,21 +25,27 @@
 
             if (order.status === "pending") {
                 buttonHTML = `
-                    <button onclick="changeStatus(${order.id}, 'accepted')">
+                    <button id="button-${order.id}" onclick="changeStatus(${order.id}, 'accepted')">
                         Accept Order
                     </button>
                 `;
             }
             else if (order.status === "accepted") {
                 buttonHTML = `
-                <button onclick="changeStatus(${order.id}, 'preparing')">
+                <button id="button-${order.id}" onclick="changeStatus(${order.id}, 'preparing')">
                     Prepare Order
                     </button>`
             }
             else if (order.status === "preparing") {
                 buttonHTML= `
-                <button onclick="changeStatus(${order.id}, 'ready')">
+                <button id="button-${order.id}" onclick="changeStatus(${order.id}, 'ready')">
                     Order Ready
+                    </button>`
+            }
+            else if (order.status === "ready") {
+                buttonHTML = `
+                <button id="button-${order.id}" onclick="changeStatus(${order.id}, 'completed')">
+                    Completed
                     </button>`
             }
 
