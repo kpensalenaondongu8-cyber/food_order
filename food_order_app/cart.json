@@ -1,1 +1,10 @@
-{}
+{
+    "Margherita Pizza": {
+        "quantity": 1,
+        "price_per_unit": 14.0
+    },
+    "Mashed Potatoes": {
+        "quantity": 2,
+        "price_per_unit": 8.9
+    }
+}
