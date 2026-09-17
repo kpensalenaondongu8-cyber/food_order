@@ -8,8 +8,16 @@
 
     <h1>Restaurant Dashboard</h1>
 
-    <div id="orders-container"></div>
+    <div id="filter-buttons">
+    <button onclick="filterOrders('all')">All</button>
+    <button onclick="filterOrders('pending')">Pending</button>
+    <button onclick="filterOrders('accepted')">Accepted</button>
+    <button onclick="filterOrders('preparing')">Preparing</button>
+    <button onclick="filterOrders('ready')">Ready</button>
+    <button onclick="filterOrders('completed')">Completed</button>
+    </div>
 
+   <div id="orders-container"></div>
     <script>
         fetch("/api/restaurant/orders")
         .then(response => response.json())
@@ -116,6 +124,11 @@
             button.remove();
         }
     });
+
+    function filterOrders(status) {
+        console.log("Selected filter:", status);
+    }
+
 }
     </script>
 
