@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 <head>
     <title>Restaurant Dashboard</title>
@@ -6,141 +7,257 @@
 
 <body>
 
-    <h1>Restaurant Dashboard</h1>
+```
+<h1>Restaurant Dashboard</h1>
 
-    <div id="filter-buttons">
+<div id="filter-buttons">
     <button onclick="filterOrders('all')">All</button>
     <button onclick="filterOrders('pending')">Pending</button>
     <button onclick="filterOrders('accepted')">Accepted</button>
     <button onclick="filterOrders('preparing')">Preparing</button>
     <button onclick="filterOrders('ready')">Ready</button>
     <button onclick="filterOrders('completed')">Completed</button>
-    </div>
+</div>
 
-   <div id="orders-container"></div>
-    <script>
-        let orders = [];
-        fetch("/api/restaurant/orders")
-        .then(response => response.json())
-        .then(data => {
-              orders = data;
-        const ordersContainer = document.getElementById("orders-container");
+<div id="orders-container"></div>
 
-        orders.forEach(order => {
+<script>
+
+    let orders = [];
+
+    const ordersContainer = document.getElementById("orders-container");
+
+
+    function displayOrders(orderList) {
+
+        ordersContainer.innerHTML = "";
+
+        orderList.forEach(order => {
 
             const orderElement = document.createElement("div");
 
             let buttonHTML = "";
 
+
             if (order.status === "pending") {
+
                 buttonHTML = `
-                    <button id="button-${order.id}" onclick="changeStatus(${order.id}, 'accepted')">
+                    <button id="button-${order.id}"
+                        onclick="changeStatus(${order.id}, 'accepted')">
                         Accept Order
                     </button>
                 `;
+
             }
+
             else if (order.status === "accepted") {
+
                 buttonHTML = `
-                <button id="button-${order.id}" onclick="changeStatus(${order.id}, 'preparing')">
-                    Prepare Order
-                    </button>`
+                    <button id="button-${order.id}"
+                        onclick="changeStatus(${order.id}, 'preparing')">
+                        Prepare Order
+                    </button>
+                `;
+
             }
+
             else if (order.status === "preparing") {
-                buttonHTML= `
-                <button id="button-${order.id}" onclick="changeStatus(${order.id}, 'ready')">
-                    Order Ready
-                    </button>`
-            }
-            else if (order.status === "ready") {
+
                 buttonHTML = `
-                <button id="button-${order.id}" onclick="changeStatus(${order.id}, 'completed')">
-                    Completed
-                    </button>`
+                    <button id="button-${order.id}"
+                        onclick="changeStatus(${order.id}, 'ready')">
+                        Order Ready
+                    </button>
+                `;
+
             }
+
+            else if (order.status === "ready") {
+
+                buttonHTML = `
+                    <button id="button-${order.id}"
+                        onclick="changeStatus(${order.id}, 'completed')">
+                        Complete Order
+                    </button>
+                `;
+
+            }
+
+
             let itemsHTML = "";
 
+
             order.items.forEach(item => {
-            itemsHTML += `
-            <p>
-            ${item.food_name}
-            × ${item.quantity}
-            - $${item.price}
-            </p>
-            `;
-           });
-                orderElement.innerHTML = `
+
+                itemsHTML += `
+                    <p>
+                        ${item.food_name}
+                        × ${item.quantity}
+                        - ₦${item.price}
+                    </p>
+                `;
+
+            });
+
+
+            orderElement.innerHTML = `
                 <h2>Order #${order.id}</h2>
+
                 <p>Customer ID: ${order.user_id}</p>
+
                 <h3>Items</h3>
+
                 ${itemsHTML}
+
                 <p>Total: ₦${order.total}</p>
-                <p id="status-${order.id}">Status: ${order.status}</p>
-                ${buttonHTML} 
+
+                <p id="status-${order.id}">
+                    Status: ${order.status}
+                </p>
+
+                ${buttonHTML}
             `;
 
-            
+
             ordersContainer.appendChild(orderElement);
+
         });
-    });
+
+    }
+
+
+    // Get orders from Flask
+    fetch("/api/restaurant/orders")
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            orders = data;
+
+            // Display the orders after they have been received
+            displayOrders(orders);
+
+        });
+
+
     function changeStatus(orderId, newStatus) {
-    fetch(`/api/restaurant/orders/${orderId}/status`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            status: newStatus
+
+        fetch(`/api/restaurant/orders/${orderId}/status`, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                status: newStatus
+            })
+
         })
-    })
-    .then(response => response.json())
-    .then(result => {
-        console.log(result);
 
-        document.getElementById(`status-${orderId}`).textContent =
-            `Status: ${newStatus}`
-        const button = document.getElementById(`button-${orderId}`); 
-        
-        if (newStatus === "accepted") {
-            button.textContent = "Prepare Order";
-            button.setAttribute(
-                "onclick",
-                `changeStatus(${orderId}, 'preparing')`
-            );
-        }
-        else if (newStatus === "preparing") {
-            button.textContent = "Order Ready";
-            button.setAttribute(
-                "onclick",
-                `changeStatus(${orderId}, 'ready')`
-            );
-        }
-        else if (newStatus === "ready") {
-            button.textContent = "Order complete";
-            button.setAttribute(
-                "onclick",
-                `changeStatus(${orderId}, 'completed')`
-            );
-        }
-        else if (newStatus === "completed") {
-            button.remove();
-        }
-    });
-    }
-    
-    function filterOrders(status) {
-    let filteredOrders;
+        .then(response => response.json())
 
-    if (status === "all") {
-        filteredOrders = orders;
-    } else {
-        filteredOrders = orders.filter(order => {
-            return order.status === status;
+        .then(result => {
+
+            console.log(result);
+
+
+            // Find the order inside the orders array
+            const order = orders.find(order => order.id === orderId);
+
+
+            // Update the order's status in JavaScript
+            if (order) {
+                order.status = newStatus;
+            }
+
+
+            // Update the status displayed on the page
+            const statusElement =
+                document.getElementById(`status-${orderId}`);
+
+            statusElement.textContent =
+                `Status: ${newStatus}`;
+
+
+            const button =
+                document.getElementById(`button-${orderId}`);
+
+
+            if (newStatus === "accepted") {
+
+                button.textContent = "Prepare Order";
+
+                button.setAttribute(
+                    "onclick",
+                    `changeStatus(${orderId}, 'preparing')`
+                );
+
+            }
+
+            else if (newStatus === "preparing") {
+
+                button.textContent = "Order Ready";
+
+                button.setAttribute(
+                    "onclick",
+                    `changeStatus(${orderId}, 'ready')`
+                );
+
+            }
+
+            else if (newStatus === "ready") {
+
+                button.textContent = "Complete Order";
+
+                button.setAttribute(
+                    "onclick",
+                    `changeStatus(${orderId}, 'completed')`
+                );
+
+            }
+
+            else if (newStatus === "completed") {
+
+                button.remove();
+
+            }
+
         });
+
     }
 
-    console.log(filteredOrders);
-}
-    </script>
+
+    function filterOrders(status) {
+
+        let filteredOrders;
+
+
+        if (status === "all") {
+
+            filteredOrders = orders;
+
+        }
+
+        else {
+
+            filteredOrders = orders.filter(order => {
+
+                return order.status === status;
+
+            });
+
+        }
+
+
+        displayOrders(filteredOrders);
+
+    }
+
+</script>
+```
 
 </body>
 </html>
