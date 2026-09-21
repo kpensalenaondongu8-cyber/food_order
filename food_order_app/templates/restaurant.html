@@ -120,14 +120,14 @@
                 `changeStatus(${orderId}, 'completed')`
             );
         }
-        else if (newStatus == "completed") {
+        else if (newStatus === "completed") {
             button.remove();
         }
     });
+    }
 
     function filterOrders(status) {
         console.log("Selected filter:", status);
-    }
 
 }
     </script>
