@@ -19,10 +19,11 @@
 
    <div id="orders-container"></div>
     <script>
+        let orders = [];
         fetch("/api/restaurant/orders")
         .then(response => response.json())
-        .then(orders => {
-
+        .then(data => {
+              orders = data;
         const ordersContainer = document.getElementById("orders-container");
 
         orders.forEach(order => {
@@ -125,10 +126,19 @@
         }
     });
     }
-
+    
     function filterOrders(status) {
-        console.log("Selected filter:", status);
+    let filteredOrders;
 
+    if (status === "all") {
+        filteredOrders = orders;
+    } else {
+        filteredOrders = orders.filter(order => {
+            return order.status === status;
+        });
+    }
+
+    console.log(filteredOrders);
 }
     </script>
 
