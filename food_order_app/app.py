@@ -88,16 +88,20 @@ def api_login():
 @app.route('/api/signup', methods=['POST'])
 def api_signup():
     data = request.json
-    create_acct(
+    success = create_acct(
         data.get("first_name"),
         data.get("middle_name", ""),
         data.get("last_name"),
         data.get("number"),
         data.get("password")
     )
-    return jsonify({"status": "success"})
-
-
+    if success:
+     return jsonify({"status": "success"})
+    else:
+      return jsonify({
+        "status": "error",
+        "message": "That number is already registered"
+    }), 409
 @app.route('/api/logout', methods=['POST'])
 def api_logout():
     session.pop("user_id", None)
