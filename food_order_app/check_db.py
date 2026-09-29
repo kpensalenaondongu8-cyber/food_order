@@ -22,15 +22,15 @@ for table in ["users", "orders", "order_items"]:
     for column in schema: 
         print(column) 
 
-    print("\n--- USERS ---") 
+print("\n--- USERS ---") 
 
-    cursor.execute(""" SELECT id, first_name, last_name, number, role 
+cursor.execute(""" SELECT id, first_name, last_name, number, role 
                    FROM users ORDER BY id 
                    """) 
-    users = cursor.fetchall() 
+users = cursor.fetchall() 
 
-    for user in users: 
+for user in users: 
         print(user) 
 
-    cursor.close() 
-    conn.close()
+cursor.close() 
+conn.close()

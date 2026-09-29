@@ -1,4 +1,3 @@
-import sqlite3
 
 from read_write_cart import load_cart, save_cart
 

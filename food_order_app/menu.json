@@ -6,19 +6,19 @@
                 "id": 1,
                 "name": "Garlic Bread",
                 "price": 5.99,
-                "quantity": 29
+                "quantity": 28
             },
             {
                 "id": 2,
                 "name": "Stuffed Mushrooms",
                 "price": 8.5,
-                "quantity": 34
+                "quantity": 33
             },
             {
                 "id": 3,
                 "name": "Mashed Potatoes",
                 "price": 8.9,
-                "quantity": 36
+                "quantity": 33
             }
         ],
         "main_courses": [
@@ -38,7 +38,7 @@
                 "id": 7,
                 "name": "Margherita Pizza",
                 "price": 14.0,
-                "quantity": 42
+                "quantity": 41
             },
             {
                 "id": 8,
