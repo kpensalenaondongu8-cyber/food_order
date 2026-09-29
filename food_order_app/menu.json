@@ -18,7 +18,7 @@
                 "id": 3,
                 "name": "Mashed Potatoes",
                 "price": 8.9,
-                "quantity": 33
+                "quantity": 31
             }
         ],
         "main_courses": [
@@ -38,7 +38,7 @@
                 "id": 7,
                 "name": "Margherita Pizza",
                 "price": 14.0,
-                "quantity": 41
+                "quantity": 40
             },
             {
                 "id": 8,
