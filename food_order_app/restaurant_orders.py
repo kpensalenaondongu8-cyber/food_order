@@ -1,7 +1,12 @@
-import sqlite3
+import os
+import psycopg
+from dotenv import load_dotenv
+
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 def get_restaurant_orders():
-   conn = sqlite3.connect("app.db")
+   conn = psycopg.connect(DATABASE_URL)
    cursor = conn.cursor()
 
 
@@ -18,7 +23,7 @@ def get_restaurant_orders():
     cursor.execute("""
         SELECT food_name, quantity, price_bought
         FROM order_items
-        WHERE order_id = ?
+        WHERE order_id = %s
         """, (order_id,))
     items = cursor.fetchall()  
     
@@ -41,5 +46,5 @@ def get_restaurant_orders():
     }
     result.append(order_data)
 
-    conn.close
+    conn.close()
     return result
