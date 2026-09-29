@@ -1,5 +1,10 @@
-import sqlite3
+import psycopg
+import os
+from dotenv import load_dotenv
 
+
+
+load_dotenv()
 
 VALID_TRANSITIONS = {
     "pending": "accepted",
@@ -8,13 +13,13 @@ VALID_TRANSITIONS = {
     "ready": "completed"
 }
 
-
+DATABASE_URL = os.getenv("DATABASE_URL")
 def restaurant_status(order_id, new_status):
-    conn = sqlite3.connect("app.db")
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT status FROM orders WHERE id = ?",
+        "SELECT status FROM orders WHERE id = %s",
         (order_id,)
     )
 
@@ -32,8 +37,8 @@ def restaurant_status(order_id, new_status):
 
     cursor.execute("""
         UPDATE orders
-        SET status = ?
-        WHERE id = ?
+        SET status = %s
+        WHERE id = %s
     """, (new_status, order_id))
 
     conn.commit()
