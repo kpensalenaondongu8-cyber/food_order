@@ -1,7 +1,12 @@
-import sqlite3
+import os
+import psycopg
+from dotenv import load_dotenv
 from functools import wraps
 from flask import session, jsonify
 
+
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 def restaurant_required(function):
 
@@ -14,16 +19,17 @@ def restaurant_required(function):
                 "message": "Login required"
             }), 401
 
-        conn = sqlite3.connect("app.db")
+        conn = psycopg.connect(DATABASE_URL)
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT role FROM users WHERE id = ?",
+            "SELECT role FROM users WHERE id = %s",
             (session["user_id"],)
         )
 
         user = cursor.fetchone()
-
+        
+        cursor.close()
         conn.close()
 
         if user is None or user[0] != "restaurant":
